@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 
     public float speed = 5.0f;
     public float rotationSpeed = 120.0f;
+    public float jumpForce = 5.0f;
     private Rigidbody rb;
 
     private void Start()
@@ -15,6 +16,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetButtonDown("Jump"))
+        {
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
 
     }
 
