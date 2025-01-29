@@ -2,9 +2,16 @@ using UnityEngine;
 using TMPro;
 using System; // Required for Type handling
 
+// if the player collects all the collectibles, vfx and win sound will play
 public class UpdateCollectibleCount : MonoBehaviour
 {
     private TextMeshProUGUI collectibleText; // Reference to the TextMeshProUGUI component
+    public GameObject winVFX;
+    public AudioSource winSound;
+    public GameObject player; // Player referansı eklendi
+    private bool hasWon = false; // Kazanma durumunu kontrol etmek için
+    private int vfxCount = 0; // VFX sayacı
+    private const int MAX_VFX_COUNT = 10; // Maksimum VFX sayısı
 
     void Start()
     {
@@ -42,5 +49,27 @@ public class UpdateCollectibleCount : MonoBehaviour
 
         // Update the collectible count display
         collectibleText.text = $"Collectibles remaining: {totalCollectibles}";
+        
+        // Tüm collectible'lar toplandığında ve VFX sayısı 10'dan azsa
+        if (totalCollectibles == 0 && vfxCount < MAX_VFX_COUNT)
+        {
+            // VFX'i player'ın üzerinde oluştur
+            if (player != null)
+            {
+                GameObject vfxInstance = Instantiate(winVFX, player.transform.position, Quaternion.identity);
+                vfxInstance.transform.parent = player.transform;
+                vfxCount++; // VFX sayacını artır
+                
+                // İlk VFX'te ses çal
+                if (vfxCount == 1)
+                {
+                    winSound.Play();
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Player referansı ayarlanmamış!");
+            }
+        }
     }
 }
